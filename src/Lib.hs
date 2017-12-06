@@ -1,20 +1,33 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Lib  where
 
+import Data.Text
 import Data.Aeson
+import Control.Monad
 
-data Release = 
-    Release { url :: String
-            , assets :: Asset }
+data Release = Release 
+    { url       :: Text
+    , assets    :: Asset 
+    } deriving Show
 
-data Asset =
-    Asset { webDownloadUrl :: String
-          , contentType :: String }
+data Asset = Asset 
+    { webDownloadUrl    :: Text
+    , contentType       :: Text 
+    } deriving Show
 
-instance FromJson Release where
+instance FromJSON Asset where
     parseJSON (Object v) = 
-        Release <$> v .: "url"
-                <*> v .: "assets"
+        Asset <$> v .: "browser_download_url"
+              <*> v .: "size"
     parseJSON _ = mzero
+
+instance FromJSON Release where
+    parseJSON (Object o) = 
+        Release <$> o .: "url"
+                <*> o .: "assets"
+    parseJSON _ = mzero     
+
 
 releasePath :: String -> String
 releasePath repo = 

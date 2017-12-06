@@ -22,6 +22,7 @@ library
   exposed-modules:     Lib
   build-depends:       base >= 4.7 && < 5
                     ,  aeson
+                    ,  text
   default-language:    Haskell2010
 
 executable h-get
@@ -31,6 +32,7 @@ executable h-get
   build-depends:       base
                      , HaskellGet
                      , aeson
+                     , text
   default-language:    Haskell2010
 
 test-suite HaskellGet-test
