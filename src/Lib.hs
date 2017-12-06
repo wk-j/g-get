@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Lib  where
+module Lib  (parseRelease) where
 
 import Data.Text
 import Data.Aeson
 import Control.Monad
+import Data.ByteString.Lazy.Internal
 
 data Release = Release 
     { url       :: Text
@@ -19,7 +20,7 @@ data Asset = Asset
 instance FromJSON Asset where
     parseJSON (Object v) = 
         Asset <$> v .: "browser_download_url"
-              <*> v .: "size"
+              <*> v .: "content_type"
     parseJSON _ = mzero
 
 instance FromJSON Release where
@@ -32,3 +33,7 @@ instance FromJSON Release where
 releasePath :: String -> String
 releasePath repo = 
     "https://api.github.com/repos/{repo}/releases/latest"
+
+parseRelease :: ByteString -> Either String Release
+parseRelease text = 
+   eitherDecode text :: Either String Release
